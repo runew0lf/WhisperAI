@@ -10,7 +10,7 @@ def main():
     video_filename = "video.mp4"
     vtt_filename = "video.vtt"
 
-    download_video(video_url, video_filename)
+    # download_video(video_url, video_filename)
     transcription = transcribe_video(video_filename)
     save_transcription_to_vtt(transcription, vtt_filename)
     logging.info("Done!")

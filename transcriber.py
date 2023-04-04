@@ -86,8 +86,24 @@ def save_transcription_to_vtt(transcription: Dict, save_target: str) -> None:
 
         for index, segment in enumerate(tqdm(segments, desc="Saving transcription")):
             file.write(f"{index + 1}\n")
-            start_time = str(datetime.timedelta(seconds=segment["start"]))
-            end_time = str(datetime.timedelta(seconds=segment["end"]))
-            file.write(f"{start_time} --> {end_time}\n")
+            start_time = datetime.timedelta(seconds=segment["start"])
+            end_time = datetime.timedelta(seconds=segment["end"])
+            file.write(f"{format_timedelta(start_time)} --> {format_timedelta(end_time)}\n")
             file.write(segment["text"].strip() + "\n\n")
     logger.info("Transcription saved.")
+
+
+def format_timedelta(td: datetime.timedelta) -> str:
+    """Formats a timedelta object as an HH:MM:SS.mmm string.
+
+    Args:
+        td: A timedelta object.
+
+    Returns:
+        A formatted string with the format HH:MM:SS.mmm.
+    """
+    total_seconds = int(td.total_seconds())
+    hours, remainder = divmod(total_seconds, 3600)
+    minutes, seconds = divmod(remainder, 60)
+    milliseconds = td.microseconds // 1000
+    return f"{hours:02d}:{minutes:02d}:{seconds:02d}.{milliseconds:03d}"
